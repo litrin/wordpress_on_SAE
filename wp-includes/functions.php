@@ -1466,35 +1466,8 @@ function wp_get_original_referer() {
  * @return bool Whether the path was created. True if path already exists.
  */
 function wp_mkdir_p( $target ) {
-    // from php.net/mkdir user contributed notes
-    if ( substr($target, 0, 10) == 'saestor://' ) {
-        return true;
-    }
-    $target = str_replace( '//', '/', $target );
-
-    // safe mode fails with a trailing slash under certain PHP versions.
-    $target = rtrim($target, '/'); // Use rtrim() instead of untrailingslashit to avoid formatting.php dependency.
-    if ( empty($target) )
-        $target = '/';
-
-    if ( file_exists( $target ) )
-        return @is_dir( $target );
-
-    // Attempting to create the directory may clutter up our display.
-    if ( @mkdir( $target ) ) {
-        $stat = @stat( dirname( $target ) );
-        $dir_perms = $stat['mode'] & 0007777;  // Get the permission bits.
-        @chmod( $target, $dir_perms );
-        return true;
-    } elseif ( is_dir( dirname( $target ) ) ) {
-        return false;
-    }
-
-    // If the above failed, attempt to create the parent node, then try again.
-    if ( ( $target != '/' ) && ( wp_mkdir_p( dirname( $target ) ) ) )
-        return wp_mkdir_p( $target );
-
-    return false;
+    //because SAE need not mkdir, for this version, just return true.
+	return true;
 }
 
 /**
@@ -1689,78 +1662,13 @@ function win_is_writable( $path ) {
  * @return array See above for description.
  */
 function wp_upload_dir( $time = null ) {
-//	$siteurl = get_option( 'siteurl' );
-//	$upload_path = trim( get_option( 'upload_path' ) );
 
-//	if ( empty( $upload_path ) || 'wp-content/uploads' == $upload_path ) {
-//		$dir = WP_CONTENT_DIR . '/uploads';
-//	} else {
-        $dir = 'saestor://wordpress/uploads';
-//	}
-
-	//if ( !$url = get_option( 'upload_url_path' ) ) {
-		//if ( empty($upload_path) || ( 'wp-content/uploads' == $upload_path ) || ( $upload_path == $dir ) )
-            // for SAE
-        $url = 'http://' . $_SERVER['HTTP_APPNAME'] . '-wordpress.stor.sinaapp.com/uploads';
-        //else
-		//	$url = trailingslashit( $siteurl ) . $upload_path;
-	//}
-
-	/*
-	 * Honor the value of UPLOADS. This happens as long as ms-files rewriting is disabled.
-	 * We also sometimes obey UPLOADS when rewriting is enabled -- see the next block.
-//	 */
-//	if ( defined( 'UPLOADS' ) && ! ( is_multisite() && get_site_option( 'ms_files_rewriting' ) ) ) {
-//		$dir = ABSPATH . UPLOADS;
-//		$url = trailingslashit( $siteurl ) . UPLOADS;
-//	}
-//
-//	// If multisite (and if not the main site in a post-MU network)
-//	if ( is_multisite() && ! ( is_main_network() && is_main_site() && defined( 'MULTISITE' ) ) ) {
-//
-//		if ( ! get_site_option( 'ms_files_rewriting' ) ) {
-//			/*
-//			 * If ms-files rewriting is disabled (networks created post-3.5), it is fairly
-//			 * straightforward: Append sites/%d if we're not on the main site (for post-MU
-//			 * networks). (The extra directory prevents a four-digit ID from conflicting with
-//			 * a year-based directory for the main site. But if a MU-era network has disabled
-//			 * ms-files rewriting manually, they don't need the extra directory, as they never
-//			 * had wp-content/uploads for the main site.)
-//			 */
-//
-//			if ( defined( 'MULTISITE' ) )
-//				$ms_dir = '/sites/' . get_current_blog_id();
-//			else
-//				$ms_dir = '/' . get_current_blog_id();
-//
-//			$dir .= $ms_dir;
-//			$url .= $ms_dir;
-//
-//		} elseif ( defined( 'UPLOADS' ) && ! ms_is_switched() ) {
-//			/*
-//			 * Handle the old-form ms-files.php rewriting if the network still has that enabled.
-//			 * When ms-files rewriting is enabled, then we only listen to UPLOADS when:
-//			 * 1) We are not on the main site in a post-MU network, as wp-content/uploads is used
-//			 *    there, and
-//			 * 2) We are not switched, as ms_upload_constants() hardcodes these constants to reflect
-//			 *    the original blog ID.
-//			 *
-//			 * Rather than UPLOADS, we actually use BLOGUPLOADDIR if it is set, as it is absolute.
-//			 * (And it will be set, see ms_upload_constants().) Otherwise, UPLOADS can be used, as
-//			 * as it is relative to ABSPATH. For the final piece: when UPLOADS is used with ms-files
-//			 * rewriting in multisite, the resulting URL is /files. (#WP22702 for background.)
-//			 */
-//
-//			if ( defined( 'BLOGUPLOADDIR' ) )
-//				$dir = untrailingslashit( BLOGUPLOADDIR );
-//			else
-//				$dir = ABSPATH . UPLOADS;
-//			$url = trailingslashit( $siteurl ) . 'files';
-//		}
-//	}
-
-	$basedir = $dir;
-	$baseurl = $url;
+	// these codes just for sae.
+	// storage called "wordpress" MUST be created.
+	$basedir = 'saestor://wordpress/uploads';
+	 
+	// the default url from storage
+	$baseurl = 'http://' . $_SERVER['HTTP_APPNAME'] . '-wordpress.stor.sinaapp.com/uploads';
 
 	$subdir = '';
 	if ( get_option( 'uploads_use_yearmonth_folders' ) ) {
