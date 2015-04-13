@@ -1,0 +1,27 @@
+<appwizard>
+    <introduction>
+        <name></name>
+        <author>Litrin J.</author>
+        <icon></icon>
+        <homepage>http://www.litrin.net/</homepage>
+        <description><![CDATA[]]></description>
+    </introduction>
+    <platform>
+        <services>
+            <service></service>
+            <service name="wordpress"  params="数据存储">Storage</service>
+            <!-- <service size="1M">Memcache</service> -->
+            <service>Mysql</service>
+        </services>
+        <appconfig>
+            <tpl><![CDATA[
+name: Wordpress on SAE
+version: 4.0
+]]>
+            </tpl>
+        </appconfig>
+    </platform>
+    <code>
+        <initScript>index.php</initScript>
+    </code>
+</appwizard>
