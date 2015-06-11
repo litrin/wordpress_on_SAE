@@ -1,8 +1,14 @@
 handle:
-- compress: if ( out_header["Content-type"] ~ "text/css" ) compress
-- compress: if ( out_header["Content-type"] ~ "text/html" ) compress
-- compress: if ( out_header["Content-type"] ~ "text/plain" ) compress
-- compress: if ( out_header["Content-type"] ~ "text/javascript" ) compress
-- expire: if( path ~ "/" ) time 86400
+  - compress: if ( out_header["Content-type"] ~ "text/css" ) compress
+  - compress: if ( out_header["Content-type"] ~ "text/html" ) compress
+  - compress: if ( out_header["Content-type"] ~ "text/plain" ) compress
+  - compress: if ( out_header["Content-type"] ~ "text/javascript" ) compress
+  
+  - expire: if( path ~ "/" ) time 86400
+  
+  - rewrite: if (!is_file() && !is_dir() && path ~ "^/(.*)") goto "index.php/$1"
 
-- rewrite: if (!is_file() && !is_dir() && path ~ "^/(.*)") goto "index.php/$1"
+cron:
+    - description: wordpress cron
+      url: wp-cron.php
+      schedule: "*/15 * * * *"
