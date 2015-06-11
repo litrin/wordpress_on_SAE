@@ -409,8 +409,16 @@ class WP_Object_Cache {
 		if ( ! $this->_exists( $key, $group ) )
 			return false;
 		unset( $this->cache[$group][$key] );
+<<<<<<< HEAD
 		memcache_delete($this->mc, $this->cover_key($group, $key));
 		return true;
+=======
+		
+        if(WP_CACHE)
+        	memcache_delete($this->mc, $this->cover_key($group, $key));
+		
+        return true;
+>>>>>>> d371052985cd9cf4a525d558a7af92e3c2ec5702
 	}
 	/**
 	 * Clears the object cache of all data
@@ -421,6 +429,11 @@ class WP_Object_Cache {
 	 */
 	public function flush() {
 		$this->cache = array ();
+<<<<<<< HEAD
+=======
+        if (WP_CACHE)
+            memcache_flush($this->mc);
+>>>>>>> d371052985cd9cf4a525d558a7af92e3c2ec5702
 		return true;
 	}
 	/**
@@ -445,7 +458,12 @@ class WP_Object_Cache {
 			$group = 'default';
 		if ( $this->multisite && ! isset( $this->global_groups[ $group ] ) )
 			$key = $this->blog_prefix . $key;
+<<<<<<< HEAD
 		if ( $this->_exists( $key, $group ) ) {
+=======
+        
+        if ( $this->_exists( $key, $group ) ) {
+>>>>>>> d371052985cd9cf4a525d558a7af92e3c2ec5702
 			$found = true;
 			$this->cache_hits += 1;
 			if ( is_object($this->cache[$group][$key]) )
@@ -453,6 +471,15 @@ class WP_Object_Cache {
 			else
 				return $this->cache[$group][$key];
 		}
+<<<<<<< HEAD
+=======
+        
+        if (WP_CACHE) {
+        	$cache = memcache_get($this->mc, $this->cover_key($group, $key));
+        	if ($cache) return $cache;
+        }
+        
+>>>>>>> d371052985cd9cf4a525d558a7af92e3c2ec5702
 		$found = false;
 		$this->cache_misses += 1;
 		return false;
@@ -517,8 +544,14 @@ class WP_Object_Cache {
 			if ( ! isset( $this->global_groups[ $group ] ) )
 				unset( $this->cache[ $group ] );
 		}
+<<<<<<< HEAD
 
 		memcache_flush($this->mc);
+=======
+        
+		if(WP_CACHE)
+			memcache_flush($this->mc);
+>>>>>>> d371052985cd9cf4a525d558a7af92e3c2ec5702
 	}
 	/**
 	 * Sets the data contents into the cache
@@ -548,9 +581,17 @@ class WP_Object_Cache {
 		if ( is_object( $data ) )
 			$data = clone $data;
 		$this->cache[$group][$key] = $data;
+<<<<<<< HEAD
 
 		memcache_set($this->mc, $this->cover_key($group, $key), $data, 86400);
 		return true;
+=======
+		
+        if( WP_CACHE && !is_object($data))
+			memcache_set($this->mc, $this->cover_key($group, $key), $data, 86400);
+		
+        return true;
+>>>>>>> d371052985cd9cf4a525d558a7af92e3c2ec5702
 	}
 
 	public function cover_key($group, $key){

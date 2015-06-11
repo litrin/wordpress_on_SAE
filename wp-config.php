@@ -83,7 +83,7 @@ define('NONCE_SALT',       hash_hmac('sha1', SAE_ACCESSKEY . 'NONCE_SALT', SAE_S
  * 如果您有在同一数据库内安装多个 WordPress 的需求，请为每个 WordPress 设置不同的数据表前缀。
  * 前缀名只能为数字、字母加下划线。
  */
-$table_prefix  = 'LT_';
+$table_prefix  = 'WP_';
 
 /**
  * WordPress 语言设置，默认为英语。
